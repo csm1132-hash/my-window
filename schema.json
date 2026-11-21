@@ -1,0 +1,89 @@
+{
+ "note": "한 줄이 무엇인지(grain)는 사람이 정한 것입니다. 조인하기 전에 반드시 봅니다.",
+ "tables": {
+  "employees": {
+   "grain": "직원 1명",
+   "rows": 1213,
+   "columns": [
+    {
+     "name": "emp_id",
+     "type": "VARCHAR"
+    },
+    {
+     "name": "department",
+     "type": "VARCHAR",
+     "values": [
+      "경영지원팀",
+      "마케팅팀",
+      "생산관리팀",
+      "연구개발팀",
+      "영업1팀",
+      "영업2팀",
+      "품질보증팀",
+      "해외사업팀"
+     ]
+    },
+    {
+     "name": "job_grade",
+     "type": "VARCHAR",
+     "values": [
+      "과장",
+      "대리",
+      "부장",
+      "사원",
+      "차장"
+     ]
+    }
+   ]
+  },
+  "expenses": {
+   "grain": "출장 1건의 비용 항목 1개",
+   "rows": 25062,
+   "columns": [
+    {
+     "name": "trip_id",
+     "type": "VARCHAR"
+    },
+    {
+     "name": "item",
+     "type": "VARCHAR",
+     "values": [
+      "교통비",
+      "숙박비",
+      "식비"
+     ]
+    },
+    {
+     "name": "amount",
+     "type": "BIGINT"
+    }
+   ]
+  },
+  "trips": {
+   "grain": "출장 1건",
+   "rows": 9047,
+   "columns": [
+    {
+     "name": "trip_id",
+     "type": "VARCHAR"
+    },
+    {
+     "name": "emp_id",
+     "type": "VARCHAR"
+    },
+    {
+     "name": "trip_date",
+     "type": "DATE"
+    },
+    {
+     "name": "destination",
+     "type": "VARCHAR"
+    },
+    {
+     "name": "nights",
+     "type": "BIGINT"
+    }
+   ]
+  }
+ }
+}

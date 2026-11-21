@@ -1,0 +1,42 @@
+{
+  "title": "출장비 정산 — 내 질문",
+  "owner": "가상 데이터입니다. 질문과 SQL은 사람이 골랐고, «확인할 값»은 edata9-data 로 실행해 나온 값입니다.",
+  "files": [
+    {
+      "match": "직원목록",
+      "table": "employees"
+    },
+    {
+      "match": "출장내역",
+      "table": "trips"
+    },
+    {
+      "match": "정산내역",
+      "table": "expenses"
+    }
+  ],
+  "questions": [
+    {
+      "id": "trip_cost_per_emp",
+      "q": "부서별 직원 한 명이 한 해 동안 쓴 출장비 (출장 없는 직원 포함)",
+      "judge": "출장이 없는 직원도 0원으로 분모에 넣는다. 정산이 없는 출장 470건은 0원으로 셌다",
+      "sql": "WITH trip_cost AS (\n  SELECT trip_id, SUM(amount) AS cost\n  FROM expenses\n  GROUP BY trip_id\n),\nemp_cost AS (\n  SELECT t.emp_id, SUM(COALESCE(c.cost, 0)) AS cost\n  FROM trips t\n  LEFT JOIN trip_cost c USING (trip_id)\n  WHERE t.trip_date >= DATE '2025-01-01' AND t.trip_date < DATE '2026-01-01'\n  GROUP BY t.emp_id\n)\nSELECT e.department AS 부서,\n       COUNT(*) AS 직원수,\n       CAST(SUM(COALESCE(ec.cost, 0)) AS BIGINT) AS 출장비_합계,\n       CAST(ROUND(SUM(COALESCE(ec.cost, 0)) / COUNT(*)) AS BIGINT) AS 직원1인당_출장비\nFROM employees e\nLEFT JOIN emp_cost ec USING (emp_id)\nGROUP BY e.department\nORDER BY 직원1인당_출장비 DESC",
+      "check": [
+        {
+          "where": {
+            "부서": "해외사업팀"
+          },
+          "col": "직원1인당_출장비",
+          "want": 17523808
+        },
+        {
+          "where": {
+            "부서": "경영지원팀"
+          },
+          "col": "직원1인당_출장비",
+          "want": 1671670
+        }
+      ]
+    }
+  ]
+}
